@@ -120,7 +120,7 @@ export default function Payments() {
 
   const totalFee = students.reduce((s: number, st: any) => s + (st.monthlyFee || 0), 0);
   const totalPaid = students.filter((s: any) => s.paid).reduce((acc: number, st: any) => acc + (st.payment?.amountBdt ? Number(st.payment.amountBdt) : 0), 0);
-  const unpaidCount = students.filter((s: any) => !s.paid && st => st).length;
+  const unpaidCount = students.filter((s: any) => !s.paid && s.monthlyFee).length;
 
   return (
     <div>
