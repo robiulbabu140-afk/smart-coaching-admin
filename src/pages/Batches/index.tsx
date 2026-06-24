@@ -5,7 +5,10 @@ import toast from 'react-hot-toast';
 import { Plus, Users, BookOpen, X, UserCheck, UserPlus } from 'lucide-react';
 
 const C = { card: '#241640', muted: '#9382B5', white: '#FBFAFF', primary: '#7C3AED', accent: '#F5A623', surface: '#1E1040' };
-const S = { input: { padding: '10px 14px', background: 'rgba(255,255,255,.06)', border: '1.5px solid rgba(124,58,237,.3)', borderRadius: 10, color: '#FBFAFF', fontSize: 13, fontFamily: 'Outfit,sans-serif', outline: 'none', width: '100%' } as const };
+const S = {
+  input: { padding: '10px 14px', background: 'rgba(255,255,255,.06)', border: '1.5px solid rgba(124,58,237,.3)', borderRadius: 10, color: '#FBFAFF', fontSize: 13, fontFamily: 'Outfit,sans-serif', outline: 'none', width: '100%' } as const,
+  select: { padding: '10px 14px', background: '#1E1040', border: '1.5px solid rgba(124,58,237,.3)', borderRadius: 10, color: '#FBFAFF', fontSize: 13, fontFamily: 'Outfit,sans-serif', outline: 'none', width: '100%', cursor: 'pointer' } as const,
+};
 
 function AddBatchModal({ onClose }: { onClose: () => void }) {
   const qc = useQueryClient();
@@ -102,7 +105,7 @@ function ManageBatchModal({ batch, onClose }: { batch: any; onClose: () => void 
             </div>
           ) : <p style={{ fontSize: 12, color: C.muted, marginBottom: 8 }}>কোনো টিচার নেই — নিচ থেকে বেছে নিন</p>}
           <div style={{ marginTop: 10 }}>
-            <select onChange={e => e.target.value && assignTeacher.mutate(e.target.value)} defaultValue="" style={{ ...S.input, cursor: 'pointer' }}>
+            <select onChange={e => e.target.value && assignTeacher.mutate(e.target.value)} defaultValue="" style={S.select}>
               <option value="">— টিচার বেছে নিন —</option>
               {teachers.map((t: any) => <option key={t.id} value={t.id}>{t.fullName} ({t.phone})</option>)}
             </select>
@@ -112,7 +115,7 @@ function ManageBatchModal({ batch, onClose }: { batch: any; onClose: () => void 
         {/* স্টুডেন্ট যোগ */}
         <div style={{ background: 'rgba(245,166,35,.06)', borderRadius: 12, padding: 16, marginBottom: 16, border: '1px solid rgba(245,166,35,.2)' }}>
           <p style={{ fontSize: 12, fontWeight: 700, color: C.accent, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}><UserPlus size={14} /> স্টুডেন্ট যোগ করুন ({members.length}/{batch.maxStudents})</p>
-          <select onChange={e => { if (e.target.value) { addStudent.mutate(e.target.value); e.target.value = ''; } }} defaultValue="" style={{ ...S.input, cursor: 'pointer' }}>
+          <select onChange={e => { if (e.target.value) { addStudent.mutate(e.target.value); e.target.value = ''; } }} defaultValue="" style={S.select}>
             <option value="">— স্টুডেন্ট বেছে নিন —</option>
             {students.filter((s: any) => !memberIds.has(s.id)).map((s: any) => (
               <option key={s.id} value={s.id}>{s.fullName} ({s.phone})</option>
