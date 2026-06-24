@@ -30,7 +30,7 @@ export default function Login() {
     try {
       await login(phone, password);
       toast.success('স্বাগতম!');
-      nav('/');
+      nav('/admin');
     } catch (err: any) {
       toast.error(err.response?.data?.error?.message || err.message || 'লগইন ব্যর্থ হয়েছে।');
     }

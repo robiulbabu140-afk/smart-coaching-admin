@@ -9,6 +9,7 @@ import Teachers from './pages/Teachers';
 import Batches from './pages/Batches';
 import Payments from './pages/Payments';
 import Reports from './pages/Reports';
+import Home from './pages/Home';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const user = useAuthStore(s => s.user);
@@ -24,8 +25,14 @@ export default function App() {
 
   return (
     <Routes>
+      {/* Public website */}
+      <Route path="/" element={<Home />} />
+
+      {/* Admin login */}
       <Route path="/login" element={<Login />} />
-      <Route path="/" element={<RequireAuth><AdminLayout /></RequireAuth>}>
+
+      {/* Admin panel — /admin/* */}
+      <Route path="/admin" element={<RequireAuth><AdminLayout /></RequireAuth>}>
         <Route index element={<Dashboard />} />
         <Route path="students" element={<Students />} />
         <Route path="teachers" element={<Teachers />} />
@@ -33,6 +40,7 @@ export default function App() {
         <Route path="payments" element={<Payments />} />
         <Route path="reports" element={<Reports />} />
       </Route>
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
