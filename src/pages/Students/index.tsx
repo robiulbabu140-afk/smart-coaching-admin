@@ -14,7 +14,7 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState({ phone: '', fullName: '', institution: '', classLevel: '', address: '', guardianName: '', guardianPhone: '' });
   const { mutate, isPending } = useMutation({
     mutationFn: () => api.post('/admin/students', form),
-    onSuccess: () => { toast.success('স্টুডেন্ট যোগ করা হয়েছে!'); qc.invalidateQueries({ queryKey: ['students'] }); onClose(); },
+    onSuccess: () => { toast.success('স্টুডেন্ট যোগ করা হয়েছে!'); qc.invalidateQueries({ queryKey: ['students'], exact: false }); onClose(); },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'সমস্যা হয়েছে।'),
   });
   const fields = [
@@ -178,7 +178,7 @@ export default function Students() {
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
 
   const { data: students = [], isLoading } = useQuery({
-    queryKey: ['students', search],
+    queryKey: ['students'],
     queryFn: () => api.get(`/admin/users?role=student${search ? `&search=${encodeURIComponent(search)}` : ''}`).then(r => r.data.data),
   });
 
