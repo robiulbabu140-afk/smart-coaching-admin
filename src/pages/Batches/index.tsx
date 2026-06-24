@@ -58,19 +58,19 @@ function ManageBatchModal({ batch, onClose }: { batch: any; onClose: () => void 
   const { data: batchDetail } = useQuery({ queryKey: ['batch', batch.id], queryFn: () => api.get(`/batches/${batch.id}`).then(r => r.data.data) });
 
   const assignTeacher = useMutation({
-    mutationFn: (teacherId: string) => api.post(`/batches/${batch.id}/teacher`, { teacherId }),
+    mutationFn: (teacherUserId: string) => api.post(`/batches/${batch.id}/assign-teacher`, { teacherUserId }),
     onSuccess: () => { toast.success('টিচার যোগ হয়েছে!'); qc.invalidateQueries({ queryKey: ['batches'] }); qc.invalidateQueries({ queryKey: ['batch', batch.id] }); },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'সমস্যা হয়েছে।'),
   });
 
   const addStudent = useMutation({
-    mutationFn: (studentId: string) => api.post(`/batches/${batch.id}/students`, { studentId }),
+    mutationFn: (studentUserId: string) => api.post(`/batches/${batch.id}/members`, { studentUserId }),
     onSuccess: () => { toast.success('স্টুডেন্ট যোগ হয়েছে!'); qc.invalidateQueries({ queryKey: ['batches'] }); qc.invalidateQueries({ queryKey: ['batch', batch.id] }); },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'সমস্যা হয়েছে।'),
   });
 
   const removeStudent = useMutation({
-    mutationFn: (studentId: string) => api.delete(`/batches/${batch.id}/students/${studentId}`),
+    mutationFn: (studentId: string) => api.delete(`/batches/${batch.id}/members/${studentId}`),
     onSuccess: () => { toast.success('স্টুডেন্ট সরানো হয়েছে।'); qc.invalidateQueries({ queryKey: ['batch', batch.id] }); qc.invalidateQueries({ queryKey: ['batches'] }); },
     onError: (e: any) => toast.error(e.response?.data?.error?.message || 'সমস্যা হয়েছে।'),
   });
@@ -104,7 +104,7 @@ function ManageBatchModal({ batch, onClose }: { batch: any; onClose: () => void 
           <div style={{ marginTop: 10 }}>
             <select onChange={e => e.target.value && assignTeacher.mutate(e.target.value)} defaultValue="" style={{ ...S.input, cursor: 'pointer' }}>
               <option value="">— টিচার বেছে নিন —</option>
-              {teachers.map((t: any) => <option key={t.id} value={t.teacherProfile?.id}>{t.fullName} ({t.phone})</option>)}
+              {teachers.map((t: any) => <option key={t.id} value={t.id}>{t.fullName} ({t.phone})</option>)}
             </select>
           </div>
         </div>
@@ -114,8 +114,8 @@ function ManageBatchModal({ batch, onClose }: { batch: any; onClose: () => void 
           <p style={{ fontSize: 12, fontWeight: 700, color: C.accent, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}><UserPlus size={14} /> স্টুডেন্ট যোগ করুন ({members.length}/{batch.maxStudents})</p>
           <select onChange={e => { if (e.target.value) { addStudent.mutate(e.target.value); e.target.value = ''; } }} defaultValue="" style={{ ...S.input, cursor: 'pointer' }}>
             <option value="">— স্টুডেন্ট বেছে নিন —</option>
-            {students.filter((s: any) => !memberIds.has(s.studentProfile?.id)).map((s: any) => (
-              <option key={s.id} value={s.studentProfile?.id}>{s.fullName} ({s.phone})</option>
+            {students.filter((s: any) => !memberIds.has(s.id)).map((s: any) => (
+              <option key={s.id} value={s.id}>{s.fullName} ({s.phone})</option>
             ))}
           </select>
         </div>
